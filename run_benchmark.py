@@ -43,9 +43,9 @@ def main():
     cpu_times = benchmark_sequential()
     np.save('cpu_times.npy', cpu_times)
     vectorized_times = benchmark_parallel('cpu')
-    np.save('vectorized_times.npy', cpu_times)
+    np.save('vectorized_times.npy', vectorized_times)
     gpu_times = benchmark_parallel('cuda:0')
-    np.save('gpu_times.npy', cpu_times)
+    np.save('gpu_times.npy', gpu_times)
 
     plt.plot(cpu_times, label='Modern robotics')
     plt.plot(vectorized_times, label='Ours (CPU)')
