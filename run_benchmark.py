@@ -9,7 +9,7 @@ from tqdm import tqdm
 from mrobo_torch.core import TorchKinematics, get_px150_M_Slist
 
 
-def benchmark_parallel(device, n_iterations=20):
+def benchmark_parallel_iterate(device, n_iterations=20):
     M, Slist = get_px150_M_Slist()
     kinematics = TorchKinematics(M, Slist, device)
     times = []
@@ -23,7 +23,7 @@ def benchmark_parallel(device, n_iterations=20):
     return times
 
 
-def benchmark_sequential(n_iterations=20):
+def benchmark_sequential_iterate(n_iterations=20):
     M, Slist = get_px150_M_Slist()
     times = []
     for i in range(n_iterations):
@@ -39,6 +39,18 @@ def benchmark_sequential(n_iterations=20):
     return times
 
 
+def benchmark_sequential(n_iterations=20):
+    # Warm up
+    _ = benchmark_sequential_iterate(5)
+    return benchmark_sequential_iterate(n_iterations)
+
+
+def benchmark_parallel(device, n_iterations=20):
+    # Warm up
+    _ = benchmark_parallel_iterate(device, 5)
+    return benchmark_parallel_iterate(device, n_iterations)
+
+
 def main():
     cpu_times = benchmark_sequential()
     np.save('cpu_times.npy', cpu_times)
@@ -47,7 +59,7 @@ def main():
     gpu_times = benchmark_parallel('cuda:0')
     np.save('gpu_times.npy', gpu_times)
 
-    plt.plot(cpu_times, label='Modern robotics')
+    # plt.plot(cpu_times, label='Modern robotics')
     plt.plot(vectorized_times, label='Ours (CPU)')
     plt.plot(gpu_times, label='Ours (GPU) ')
     plt.legend()
