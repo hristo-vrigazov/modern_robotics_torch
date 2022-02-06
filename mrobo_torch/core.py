@@ -142,7 +142,7 @@ def MatrixExp6(se3mat, eps=1e-6):
     eye = eye.unsqueeze(dim=0)
     initial = eye * theta_u
     cos_term = (1 - torch.cos(theta_u)) * omgmat
-    omg_term = torch.mm(omgmat, omgmat)
+    omg_term = torch.matmul(omgmat, omgmat)
     sin_term = (theta_u - torch.sin(theta_u)) * omg_term
     composite_term = initial + cos_term + sin_term
     v = se3mat[mask, :3, 3].unsqueeze(dim=-1)
