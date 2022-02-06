@@ -4,7 +4,7 @@ import pytest
 import torch
 
 from mrobo_torch import core
-from mrobo_torch.core import TorchKinematics
+from mrobo_torch.core import TorchKinematics, get_px150_M_Slist
 
 
 def test_MatrixExp3_matches():
@@ -23,19 +23,7 @@ def test_MatrixExp3_matches():
     "cuda:0"
 ])
 def test_forward_kinematics_matches(device):
-    M = np.array([
-        [1., 0., 0., 0.358575],
-        [0., 1., 0., 0.],
-        [0., 0., 1., 0.25391],
-        [0., 0., 0., 1.]])
-    Slist = np.array([
-        [0., 0., 0., 0., 1.],
-        [0., 1., -1., -1., 0.],
-        [1., 0., 0., 0., 0.],
-        [0., -0.10391, 0.25391, 0.25391, 0.],
-        [0., 0., 0., 0., 0.25391],
-        [0., 0., -0.05, -0.2, 0.]
-    ])
+    M, Slist = get_px150_M_Slist()
 
     kinematics = TorchKinematics(M, Slist, device=device)
     thetalist = torch.rand(2 ** 13, 5, device=device)
