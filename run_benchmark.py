@@ -65,6 +65,7 @@ def main():
     plt.legend()
     plt.xlabel('Number of input configurations (log scale)')
     plt.ylabel('Time [s]')
+    plt.savefig('benchmark.eps')
     plt.show()
 
 
